@@ -1,0 +1,231 @@
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+
+<style>
+    .center-table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+    }
+
+    .center-table th, .center-table td {
+        text-align: center;
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .center-table th {
+        background-color: #f2f2f2;
+    }
+
+    #notification-bar {
+        display: none;
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-weight: bold;
+    }
+
+    #add-client-form {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #add-client-form h3 {
+        color: #2c3e50;
+        margin: 0 0 20px 0;
+        font-size: 24px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    #add-client-form .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #add-client-form label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    #add-client-form input[type="text"] {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        /*border-color: #3498db; */
+        outline: none;
+    }
+
+    #add-client-form button {
+        padding: 8px 16px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    #add-client-form button:hover {
+        background-color: #2980b9;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .form-fields-container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-field {
+        flex: 1;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #a71d2a;
+    }
+</style>
+
+<!-- Notification Bar -->
+<div id="notification-bar">
+    Client added successfully!
+</div>
+
+<!-- Add Client Form -->
+<form id="add-client-form">
+    <h3>{{ _('Add a Client') }}</h3>
+    <div class="form-fields-container">
+        <div class="form-field">
+            <label for="name">{{ _('Name') }}:</label>
+            <input type="text" name="name" class="form-control" "placeholder="{{ _('Client Name') }}" required>
+        </div>
+        <div class="form-field">
+            <label for="phone_number">{{ _('Phone Number') }}:</label>
+            <input type="text" name="phone_number" class="form-control" placeholder="{{ _('Client Phone Number') }}" required>
+        </div>
+    </div>
+    <button type="submit">{{ _('Add Client') }}</button>
+</form>
+
+<style>
+    .form-fields-container {
+        display: flex;
+        gap: 20px; /* Adjust the gap as needed */
+    }
+
+    .form-field {
+        flex: 1;
+    }
+</style>
+
+<!-- Clients Table -->
+<table id="clients-table" class="center-table">
+    <tr>
+        <th>{{ _('Client ID') }}</th>
+        <th>{{ _('Name') }}</th>
+        <th>{{ _('Phone Number') }}</th>
+        <th>{{ _('Actions') }}</th>
+    </tr>
+    {% for client in clients %}
+    <tr data-client-id="{{ client['id'] }}">
+        <td>{{ client['id'] }}</td>
+        <td>{{ client['name'] }}</td>
+        <td>{{ client['phone_number'] }}</td>
+        <td>
+            <form class="remove-client-form" style="display:inline;">
+                <input type="hidden" name="client_id" value="{{ client['id'] }}">
+                <button type="submit" class="btn btn-danger">{{ _('Remove') }}</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+<!-- Scripts -->
+<script>
+function showNotification(message, duration = 3000) {
+    const notificationBar = document.getElementById('notification-bar');
+    notificationBar.textContent = message;
+    notificationBar.style.display = 'block';
+
+    setTimeout(() => {
+        notificationBar.style.display = 'none';
+    }, duration);
+}
+
+$(document).ready(function() {
+    // Add Client Form Submission
+    $('#add-client-form').on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/add_client',
+            data: $(this).serialize(),
+            success: function(response) {
+                showNotification('Client added successfully!', 2000);
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            },
+            error: function() {
+                showNotification('Error adding client.', 3000);
+            }
+        });
+    });
+
+    // Remove Client Form Submission
+    $('.remove-client-form').on('submit', function(event) {
+        event.preventDefault();
+        if (confirm('Are you sure you want to remove this client?')) {
+            $.ajax({
+                type: 'POST',
+                url: '/remove_client',
+                data: $(this).serialize(),
+                success: function(response) {
+                    showNotification('Client removed successfully!', 3000);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function() {
+                    alert('Error removing client.');
+                }
+            });
+        }
+    });
+});
+</script>

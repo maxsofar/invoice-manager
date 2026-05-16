@@ -1,0 +1,145 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <you@example.com>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: you@example.com\n"
+"POT-Creation-Date: 2025-03-22 18:30+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <you@example.com>\n"
+"Language-Team: LANGUAGE <you@example.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: templates/client_section.html:11 templates/orders_section.html:33
+msgid "Client ID"
+msgstr ""
+
+#: templates/client_section.html:12 templates/client_section.html:34
+msgid "Name"
+msgstr ""
+
+#: templates/client_section.html:13 templates/client_section.html:36
+msgid "Phone Number"
+msgstr ""
+
+#: templates/client_section.html:14 templates/orders_section.html:35
+msgid "Actions"
+msgstr ""
+
+#: templates/client_section.html:24 templates/orders_section.html:46
+msgid "Remove"
+msgstr ""
+
+#: templates/client_section.html:33
+msgid "Add a Client"
+msgstr ""
+
+#: templates/client_section.html:35
+msgid "Client Name"
+msgstr ""
+
+#: templates/client_section.html:37
+msgid "Client Phone Number"
+msgstr ""
+
+#: templates/client_section.html:38
+msgid "Add Client"
+msgstr ""
+
+#: templates/index.html:88
+msgid "Welcome to Your Invoice Tool!"
+msgstr ""
+
+#: templates/index.html:92
+msgid "Clients"
+msgstr ""
+
+#: templates/index.html:98
+msgid "Orders"
+msgstr ""
+
+#: templates/orders_section.html:5
+msgid "Add an Order"
+msgstr ""
+
+#: templates/orders_section.html:6
+msgid "Search Client:"
+msgstr ""
+
+#: templates/orders_section.html:7
+msgid "Search by ID or Name"
+msgstr ""
+
+#: templates/orders_section.html:10
+msgid "Date:"
+msgstr ""
+
+#: templates/orders_section.html:14 templates/orders_section.html:57
+msgid "Order Items"
+msgstr ""
+
+#: templates/orders_section.html:16 templates/orders_section.html:143
+msgid "Description:"
+msgstr ""
+
+#: templates/orders_section.html:17 templates/orders_section.html:144
+msgid "Item Description"
+msgstr ""
+
+#: templates/orders_section.html:18 templates/orders_section.html:145
+msgid "Quantity:"
+msgstr ""
+
+#: templates/orders_section.html:19 templates/orders_section.html:61
+#: templates/orders_section.html:146
+msgid "Quantity"
+msgstr ""
+
+#: templates/orders_section.html:20 templates/orders_section.html:147
+msgid "Price per Unit:"
+msgstr ""
+
+#: templates/orders_section.html:21 templates/orders_section.html:62
+#: templates/orders_section.html:148
+msgid "Price per Unit"
+msgstr ""
+
+#: templates/orders_section.html:22 templates/orders_section.html:149
+msgid "Remove Item"
+msgstr ""
+
+#: templates/orders_section.html:25
+msgid "Add Another Item"
+msgstr ""
+
+#: templates/orders_section.html:26
+msgid "Add Order"
+msgstr ""
+
+#: templates/orders_section.html:32
+msgid "Order ID"
+msgstr ""
+
+#: templates/orders_section.html:34
+msgid "Date"
+msgstr ""
+
+#: templates/orders_section.html:43
+msgid "View Items"
+msgstr ""
+
+#: templates/orders_section.html:49
+msgid "Generate Invoice"
+msgstr ""
+
+#: templates/orders_section.html:60
+msgid "Description"
+msgstr ""
+

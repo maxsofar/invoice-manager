@@ -1,0 +1,423 @@
+<!-- Form to Add an Order -->
+<form id="add-order-form" class="order-form">
+    <div class="form-header">
+        <div class="header-flex">
+            <h3>{{ _('Add an Order') }}</h3>
+            <div class="date-container">
+                <label for="date">{{ _('Date:') }}</label>
+                <input type="date" name="date" class="form-control date-input" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="form-group">
+            <label for="client_search">{{ _('Search Client:') }}</label>
+            <div class="search-container">
+                <input type="text" id="client_search" class="form-control" placeholder="{{ _('Search by ID or Name') }}">
+                <div id="client_search_results" class="search-results"></div>
+            </div>
+            <input type="hidden" name="client_id" id="client_id" required>
+        </div>
+    </div>
+
+    <div class="form-section" id="order-items">
+        <div class="section-header">
+            <h4>{{ _('Order Items') }}</h4>
+        </div>
+
+        <div class="order-item">
+            <div class="order-item-grid">
+                <div class="form-group">
+                    <label for="description">{{ _('Description:') }}</label>
+                    <input type="text" name="items[0][description]" class="form-control" placeholder="{{ _('Item Description') }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">{{ _('Quantity:') }}</label>
+                    <input type="number" name="items[0][quantity]" class="form-control" placeholder="{{ _('Quantity') }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price_per_unit">{{ _('Price per Unit:') }}</label>
+                    <input type="number" step="0.01" name="items[0][price_per_unit]" class="form-control" placeholder="{{ _('Price per Unit') }}" required>
+                </div>
+
+                <div class="form-group action-group">
+                    <button type="button" class="btn btn-danger remove-item">{{ _('Remove') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" id="add-item" class="btn btn-secondary">
+            <i class="fa fa-plus"></i> {{ _('Add Another Item') }}
+        </button>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save"></i> {{ _('Add Order') }}
+        </button>
+    </div>
+</form>
+
+<div style="margin-top: 40px;">
+    {% include 'orders_section.html' %}
+</div>
+
+<style>
+    /* Modern Form Styling */
+    .order-form {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .date-container {
+        display: flex;
+        flex-direction: column;
+        min-width: 150px;
+    }
+
+    .date-input {
+        width: 150px;
+    }
+
+    .form-header h3 {
+        color: #2c3e50;
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+        background-color: white;
+        padding: 35px;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header {
+        margin-bottom: 15px;
+    }
+
+    .section-header h4 {
+        color: #3498db;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    /* Search results styling */
+    .search-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .search-results {
+        position: absolute;
+        width: 100%;
+        border: 1px solid #ddd;
+        max-height: 150px;
+        overflow-y: auto;
+        background-color: #fff;
+        border-radius: 0 0 4px 4px;
+        z-index: 10;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Order item grid layout */
+    .order-item {
+        background-color: #f5f7fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .order-item-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 0.5fr;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .action-group {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+
+    /* Buttons styling */
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+
+    .btn-secondary {
+        background-color: #7f8c8d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #6c7a7a;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+        color: white;
+        padding: 6px 12px;
+    }
+
+    .btn-danger:hover {
+        background-color: #c0392b;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 15px;
+    }
+
+    /* Add Font Awesome Icons (you need to include the Font Awesome library) */
+    .fa {
+        margin-right: 5px;
+    }
+
+    /* Order items modal styling */
+    #order-items-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 80%;
+        max-height: 80%;
+        overflow-y: auto;
+    }
+
+    #order-items-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #order-items-table th, #order-items-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    #order-items-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .center-table th, .center-table td {
+        text-align: center;
+    }
+
+    .view-items.active {
+        background-color: #3498db;
+        color: white;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .header-flex {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .date-container {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .date-input {
+            width: 100%;
+        }
+
+        .order-item-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .action-group {
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+
+        #order-items-modal {
+            max-width: 95%;
+        }
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let itemIndex = 1;
+
+    // Handle add order form submission
+    $('#add-order-form').on('submit', function(event) {
+        event.preventDefault();
+        const formData = $(this).serialize();
+        console.log('Serialized form data:', formData);  // Debugging statement
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_order',
+            data: formData,
+            success: function(response) {
+                alert('Order added successfully!');
+                location.reload(); // Reload the page to update the order list
+            },
+            error: function() {
+                alert('Error adding order.');
+            }
+        });
+    });
+
+    // Handle remove order form submission
+    $('.remove-order-form').on('submit', function(event) {
+        event.preventDefault();
+        if (confirm('Are you sure you want to remove this order?')) {
+            $.ajax({
+                type: 'POST',
+                url: '/remove_order',
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert('Order removed successfully!');
+                    location.reload(); // Reload the page to update the order list
+                },
+                error: function() {
+                    alert('Error removing order.');
+                }
+            });
+        }
+    });
+
+    // Handle client search
+    $('#client_search').on('input', function() {
+        var query = $(this).val();
+        if (query.length > 0) {
+            $.ajax({
+                type: 'GET',
+                url: '/search_clients',
+                data: { query: query },
+                success: function(response) {
+                    $('#client_search_results').html(response);
+                },
+                error: function() {
+                    $('#client_search_results').html('<p>Error searching clients.</p>');
+                }
+            });
+        } else {
+            $('#client_search_results').empty();
+        }
+    });
+
+    // Handle client selection from search results
+    $(document).on('click', '.client-result', function() {
+        var clientId = $(this).data('client-id');
+        var clientName = $(this).text();
+        $('#client_id').val(clientId);
+        $('#client_search').val(clientName);
+        $('#client_search_results').empty();
+    });
+
+    // Add new item with updated styling
+    $('#add-item').on('click', function() {
+        const newItem = `
+            <div class="order-item">
+                <div class="order-item-grid">
+                    <div class="form-group">
+                        <label for="description">{{ _('Description:') }}</label>
+                        <input type="text" name="items[${itemIndex}][description]" class="form-control" placeholder="{{ _('Item Description') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">{{ _('Quantity:') }}</label>
+                        <input type="number" name="items[${itemIndex}][quantity]" class="form-control" placeholder="{{ _('Quantity') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price_per_unit">{{ _('Price per Unit:') }}</label>
+                        <input type="number" step="0.01" name="items[${itemIndex}][price_per_unit]" class="form-control" placeholder="{{ _('Price per Unit') }}" required>
+                    </div>
+
+                    <div class="form-group action-group">
+                        <button type="button" class="btn btn-danger remove-item">{{ _('Remove') }}</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#order-items').append(newItem);
+        itemIndex++;
+    });
+
+    // Remove item
+    $(document).on('click', '.remove-item', function() {
+        $(this).closest('.order-item').remove();
+    });
+
+
+});
+</script>

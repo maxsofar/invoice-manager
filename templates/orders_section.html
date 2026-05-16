@@ -1,0 +1,108 @@
+
+<div class="section">
+    <table id="orders-table" class="center-table">
+        <tr>
+            <th>{{ _('Order ID') }}</th>
+            <th>{{ _('Client ID') }}</th>
+            <th>{{ _('Date') }}</th>
+            <th>{{ _('Actions') }}</th>
+        </tr>
+        {% for order in orders %}
+        <tr data-order-id="{{ order['id'] }}">
+            <td>{{ order['id'] }}</td>
+            <td>{{ order['client_id'] }}</td>
+            <td>{{ order['date'] }}</td>
+            <td>
+                <button class="view-items btn btn-secondary">{{ _('View Items') }}</button>
+                <form class="remove-order-form" style="display:inline;">
+                    <input type="hidden" name="order_id" value="{{ order['id'] }}">
+                    <button type="submit" class="btn btn-danger">{{ _('Remove') }}</button>
+                </form>
+                <button class="generate-invoice btn btn-primary">{{ _('Generate Invoice') }}</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- Order Items Modal for viewing order details -->
+<div id="order-items-modal" style="display: none;">
+    <table id="order-items-table" class="center-table">
+        <tr>
+            <th>{{ _('Description') }}</th>
+            <th>{{ _('Quantity') }}</th>
+            <th>{{ _('Price per Unit') }}</th>
+        </tr>
+    </table>
+</div>
+
+<script>
+$(document).ready(function() {
+    let currentlyActiveButton = null;
+    let currentlyViewedOrderId = null;
+
+    $('.view-items').on('click', function() {
+        const clickedButton = $(this);
+        const orderId = clickedButton.closest('tr').data('order-id');
+
+        if (currentlyActiveButton && currentlyActiveButton.is(clickedButton)) {
+            $('#order-items-modal').hide();
+            clickedButton.removeClass('active');
+            currentlyActiveButton = null;
+            currentlyViewedOrderId = null;
+            return;
+        }
+
+        if (currentlyActiveButton) {
+            currentlyActiveButton.removeClass('active');
+        }
+
+        currentlyActiveButton = clickedButton;
+        currentlyViewedOrderId = orderId;
+        clickedButton.addClass('active');
+
+        $.ajax({
+            type: 'GET',
+            url: '/order_items/' + orderId,
+            success: function(items) {
+                console.log('Received items:', items);
+                const itemsTable = $('#order-items-table');
+                itemsTable.find('tr:gt(0)').remove();
+
+                if (items && items.length > 0) {
+                    items.forEach(function(item) {
+                        itemsTable.append('<tr><td>' + item.description + '</td><td>' + item.quantity + '</td><td>$' + item.price_per_unit + '</td></tr>');
+                    });
+                } else {
+                    itemsTable.append('<tr><td colspan="3">No items found for this order</td></tr>');
+                }
+
+                $('#order-items-modal').show();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error details:', xhr.responseText);
+                alert('Error fetching order items: ' + error);
+            }
+        });
+    });
+
+    $('.generate-invoice').on('click', function() {
+        const orderId = $(this).closest('tr').data('order-id');
+
+        $.ajax({
+            type: 'GET',
+            url: '/generate_invoice/' + orderId,
+            success: function(response) {
+                const blob = new Blob([response], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error details:', xhr.responseText);
+                alert('Error generating invoice: ' + error);
+            }
+        });
+    });
+});
+</script>
+
